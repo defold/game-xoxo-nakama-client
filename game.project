@@ -24,3 +24,8 @@ bundle_identifier = com.defold.game.xoxo.nakama
 
 [input]
 game_binding = /xoxo/input/game.input_bindingc
+
+[nakama]
+host = xoxo.eu-west1-a.nakamacloud.io
+port = 443
+server_key = d4aqXLFCuKsF

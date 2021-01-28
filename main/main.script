@@ -1,12 +1,7 @@
-
 local xoxo_nakama = require "main.xoxo_nakama"
-
 local monarch = require "monarch.monarch"
 
-
 function init(self)
-	monarch.debug()
-	
 	msg.post(".", "acquire_input_focus")
 
 	xoxo_nakama.login(function(ok, err)
@@ -15,7 +10,6 @@ function init(self)
 		end
 	end)
 end
-
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("proxy_loaded") then

@@ -118,15 +118,17 @@ local function handle_match_presence(match_presence_event)
 end
 
 
+
 function M.login(callback)
-	local config = {
-		host = "127.0.0.1",
-		port = 7350,
-		username = "defaultkey",
-		password = "",
-		engine = defold,
-	}
-	
+	local config = {}
+	config.host = sys.get_config("nakama.host", "127.0.0.1")
+	config.port = tonumber(sys.get_config("nakama.port", "7350"))
+	config.use_ssl = config.port == 443
+	config.username = sys.get_config("nakama.server_key", "defaultkey")
+	config.password = ""
+	config.use_ssl = true
+	config.engine = defold
+		
 	client = nakama.create_client(config)
 	pprint(client)
 
