@@ -53,9 +53,9 @@ local function leave_match(match_id)
 		log("Sending match_leave message")
 		local message = nakama.create_match_leave_message(match_id)
 		local result = nakama.socket_send(socket, message)
-		pprint(result)
 		if result.error then
 			log(result.error.message)
+			pprint(result)
 		end
 	end)
 end
@@ -75,7 +75,7 @@ local function find_opponent_and_join_match(match_callback)
 		local message = nakama.create_matchmaker_add_message("*", 2, 2)
 		local result = nakama.socket_send(socket, message)
 		if result.error then
-			print(result.error.message)
+			log(result.error.message)
 			pprint(result)
 			match_callback(nil)
 		end
@@ -100,7 +100,6 @@ local function send_player_move(match_id, row, col)
 end
 
 
-
 local function handle_match_data(match_data)
 	local data = json.decode(match_data.data)
 	local op_code = tonumber(match_data.op_code)
@@ -112,30 +111,42 @@ local function handle_match_data(match_data)
 end
 
 
-local config = {
-	host = "127.0.0.1",
-	port = 7350,
-	username = "defaultkey",
-	password = "",
-	engine = defold,
-}
+local function handle_match_presence(match_presence_event)
+	if #message.match_presence_event.leaves > 0 then
+		xoxo.opponent_left()
+	end
+end
 
 
 function M.login(callback)
-	log.print()
-
+	local config = {
+		host = "127.0.0.1",
+		port = 7350,
+		username = "defaultkey",
+		password = "",
+		engine = defold,
+	}
+	
 	client = nakama.create_client(config)
 	pprint(client)
 
 	nakama.sync(function()
+		-- Start by doing a device login (the login will be tied
+		-- not to a specific user but to the device the game is
+		-- running on)
 		local ok = device_login(client)
 		if not ok then
 			callback(false, "Unable to login")
 			return
 		end
+
+		-- the logged in account
 		local account = nakama.get_account(client)
 		pprint(account)
 
+		-- Next we create a socket connection as well
+		-- we use the socket connetion to exchange messages
+		-- with the matchmaker and match
 		socket = nakama.create_socket(client)
 		local ok, err = nakama.socket_connect(socket)
 		if not ok then
@@ -144,32 +155,43 @@ function M.login(callback)
 			return
 		end
 
-		local match_id = nil
-
+		-- Called by Nakama when a player has left (or joined) the
+		-- current match.
+		-- We notify the game that the opponent has left.
 		nakama.on_matchpresence(socket, function(message)
 			log("nakama.on_matchpresence")
 			pprint(message)
-			if #message.match_presence_event.leaves > 0 then
-				xoxo.opponent_left()
-			end
+			handle_match_presence(message.match_presence_event)
 		end)
-		
+
+		-- Called by Nakama when the game state has changed.
+		-- We parse the data and send it to the game.
 		nakama.on_matchdata(socket, function(message)
 			log("nakama.on_matchdata")
 			pprint(message)
 			handle_match_data(message.match_data)
 		end)
-		
+
+		-- This will get called by the game when the player pressed the
+		-- Join button in the menu.
+		-- We add the logged in player to the matchmaker and join a match
+		-- once one is found. We then call the provided callback to let the
+		-- game know that it can proceed into the game
 		xoxo.on_join_match(function(callback)
 			log("xoxo.on_join_match")
 			find_opponent_and_join_match(callback)
 		end)
 
+		-- Called by the game when the player pressed the Leave button
+		-- when a game is finished (instead of waiting for the next match).
+		-- We send a match leave message to Nakama. Fire and forget.
 		xoxo.on_leave_match(function()
 			log("xoxo.on_leave_match")
 			leave_match(match.match_id)
 		end)
 
+		-- Called by the game when the player is trying to make a move.
+		-- We send a match data message to Nakama.
 		xoxo.on_send_player_move(function(row, col)
 			log("xoxo.on_send_player_move")
 			send_player_move(match.match_id, row, col)
