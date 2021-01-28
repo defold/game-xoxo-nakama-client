@@ -1,0 +1,25 @@
+
+local xoxo_nakama = require "main.xoxo_nakama"
+
+local monarch = require "monarch.monarch"
+
+
+function init(self)
+	monarch.debug()
+	
+	msg.post(".", "acquire_input_focus")
+
+	xoxo_nakama.login(function(ok, err)
+		if ok then
+			msg.post("#collectionproxy", "async_load")
+		end
+	end)
+end
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("proxy_loaded") then
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+	end
+end

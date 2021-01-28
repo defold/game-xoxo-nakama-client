@@ -1,0 +1,26 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 640
+height = 1136
+
+[android]
+input_method = HiddenInputField
+package = com.defold.game.xoxo.nakama
+
+[project]
+dependencies = https://github.com/defold/game-xoxo/archive/main.zip,https://github.com/defold/extension-websocket/archive/1.5.2.zip,https://github.com/heroiclabs/nakama-defold/archive/dev-improve-failed-http-requests.zip,https://github.com/britzl/gooey/archive/9.1.1.zip,https://github.com/britzl/monarch/archive/3.2.2.zip,https://github.com/britzl/ludobits/archive/6.9.1.zip
+title = XOXO Nakama
+
+[osx]
+bundle_identifier = com.defold.game.xoxo.nakama
+
+[ios]
+bundle_identifier = com.defold.game.xoxo.nakama
+
+[input]
+game_binding = /xoxo/input/game.input_bindingc

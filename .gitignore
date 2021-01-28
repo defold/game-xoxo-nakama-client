@@ -1,5 +1,6 @@
-/.internal
-/build
+/client/.internal
+/client/build
+/server/.cookie
 .externalToolBuilders
 .DS_Store
 Thumbs.db
