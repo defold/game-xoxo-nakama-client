@@ -132,6 +132,9 @@ end
 -- * socket events from Nakama
 -- * events from the game
 function M.login(callback)
+	-- enable logging
+	log.print()
+
 	local config = {}
 	config.host = sys.get_config("nakama.host", "127.0.0.1")
 	config.port = tonumber(sys.get_config("nakama.port", "7350"))
