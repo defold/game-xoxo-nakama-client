@@ -1,19 +1,13 @@
+local xoxo = require "xoxo.xoxo"
 local xoxo_nakama = require "main.xoxo_nakama"
-local monarch = require "monarch.monarch"
 
 function init(self)
-	msg.post(".", "acquire_input_focus")
-
+	-- login and set up nakama
 	xoxo_nakama.login(function(ok, err)
 		if ok then
-			msg.post("#collectionproxy", "async_load")
+			msg.post(".", "acquire_input_focus")
+			-- let the game know that we are connected
+			xoxo.connected()
 		end
 	end)
-end
-
-function on_message(self, message_id, message, sender)
-	if message_id == hash("proxy_loaded") then
-		msg.post(sender, "init")
-		msg.post(sender, "enable")
-	end
 end

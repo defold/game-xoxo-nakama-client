@@ -11,9 +11,12 @@ local client = nil
 local socket = nil
 local match = nil
 
+-- match data op-codes
 local OP_CODE_MOVE = 1
 local OP_CODE_STATE = 2
 
+
+-- authentication using device id
 local function device_login(client)
 	local body = nakama.create_api_account_device(defold.uuid())
 	local result = nakama.authenticate_device(client, body, true)
@@ -31,6 +34,7 @@ local function device_login(client)
 end
 
 
+-- join a match (provided by the matchmaker)
 local function join_match(match_id, token, match_callback)
 	nakama.sync(function()
 		log("Sending match_join message")
@@ -48,6 +52,8 @@ local function join_match(match_id, token, match_callback)
 	end)
 end
 
+
+-- leave a match
 local function leave_match(match_id)
 	nakama.sync(function()
 		log("Sending match_leave message")
@@ -60,6 +66,8 @@ local function leave_match(match_id)
 	end)
 end
 
+-- find an opponent (using the matchmaker)
+-- and then join the match
 local function find_opponent_and_join_match(match_callback)
 	nakama.on_matchmakermatched(socket, function(message)
 		local matched = message.matchmaker_matched
@@ -82,7 +90,7 @@ local function find_opponent_and_join_match(match_callback)
 	end)
 end
 
-
+-- send move as match data
 local function send_player_move(match_id, row, col)
 	nakama.sync(function()
 		local data = json.encode({
@@ -99,7 +107,8 @@ local function send_player_move(match_id, row, col)
 	end)
 end
 
-
+-- handle received match data
+-- decode it and pass it on to the game
 local function handle_match_data(match_data)
 	local data = json.decode(match_data.data)
 	local op_code = tonumber(match_data.op_code)
@@ -110,15 +119,18 @@ local function handle_match_data(match_data)
 	end
 end
 
-
+-- handle when a player leaves the match
+-- pass this on to the game
 local function handle_match_presence(match_presence_event)
 	if #message.match_presence_event.leaves > 0 then
 		xoxo.opponent_left()
 	end
 end
 
-
-
+-- login to Nakama
+-- setup listeners
+-- * socket events from Nakama
+-- * events from the game
 function M.login(callback)
 	local config = {}
 	config.host = sys.get_config("nakama.host", "127.0.0.1")
@@ -126,7 +138,6 @@ function M.login(callback)
 	config.use_ssl = config.port == 443
 	config.username = sys.get_config("nakama.server_key", "defaultkey")
 	config.password = ""
-	config.use_ssl = true
 	config.engine = defold
 		
 	client = nakama.create_client(config)
