@@ -13,8 +13,9 @@ input_method = HiddenInputField
 package = com.defold.game.xoxo.nakama
 
 [project]
-dependencies = https://github.com/defold/game-xoxo/archive/main.zip,https://github.com/defold/extension-websocket/archive/1.5.2.zip,https://github.com/heroiclabs/nakama-defold/archive/dev-improve-failed-http-requests.zip,https://github.com/britzl/gooey/archive/9.1.1.zip,https://github.com/britzl/monarch/archive/3.2.2.zip,https://github.com/britzl/ludobits/archive/6.9.1.zip
+dependencies = https://github.com/defold/game-xoxo/archive/main.zip,https://github.com/heroiclabs/nakama-defold/archive/master.zip,https://github.com/britzl/gooey/archive/9.1.1.zip,https://github.com/britzl/monarch/archive/3.2.2.zip,https://github.com/defold/extension-websocket/archive/2.1.0.zip
 title = XOXO Nakama
+version = 1.0.3
 
 [osx]
 bundle_identifier = com.defold.game.xoxo.nakama
@@ -29,3 +30,7 @@ game_binding = /xoxo/input/game.input_bindingc
 host = xoxo.eu-west1-a.nakamacloud.io
 port = 443
 server_key = d4aqXLFCuKsF
+
+[websocket]
+debug = 2
+

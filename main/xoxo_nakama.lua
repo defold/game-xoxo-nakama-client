@@ -122,7 +122,7 @@ end
 -- handle when a player leaves the match
 -- pass this on to the game
 local function handle_match_presence(match_presence_event)
-	if #message.match_presence_event.leaves > 0 then
+	if match_presence_event.leaves and #match_presence_event.leaves > 0 then
 		xoxo.opponent_left()
 	end
 end
@@ -144,7 +144,6 @@ function M.login(callback)
 	config.engine = defold
 		
 	client = nakama.create_client(config)
-	pprint(client)
 
 	nakama.sync(function()
 		-- Start by doing a device login (the login will be tied
@@ -176,7 +175,6 @@ function M.login(callback)
 		-- We notify the game that the opponent has left.
 		nakama.on_matchpresence(socket, function(message)
 			log("nakama.on_matchpresence")
-			pprint(message)
 			handle_match_presence(message.match_presence_event)
 		end)
 
@@ -184,7 +182,6 @@ function M.login(callback)
 		-- We parse the data and send it to the game.
 		nakama.on_matchdata(socket, function(message)
 			log("nakama.on_matchdata")
-			pprint(message)
 			handle_match_data(message.match_data)
 		end)
 
