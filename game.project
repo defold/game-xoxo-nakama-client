@@ -15,7 +15,7 @@ package = com.defold.game.xoxo.nakama
 [project]
 dependencies = https://github.com/defold/game-xoxo/archive/1.2.0.zip,https://github.com/heroiclabs/nakama-defold/archive/master.zip,https://github.com/britzl/gooey/archive/9.1.1.zip,https://github.com/britzl/monarch/archive/3.2.2.zip,https://github.com/defold/extension-websocket/archive/2.1.0.zip
 title = XOXO Nakama
-version = 1.0.3
+version = 1.1.0
 
 [osx]
 bundle_identifier = com.defold.game.xoxo.nakama
@@ -27,9 +27,9 @@ bundle_identifier = com.defold.game.xoxo.nakama
 game_binding = /xoxo/input/game.input_bindingc
 
 [nakama]
-host = xoxo.eu-west1-a.nakamacloud.io
+host = xoxo-prod1.eu-west1-a.nakamacloud.io
 port = 443
-server_key = d4aqXLFCuKsF
+server_key = LUqmWz5zwa1k
 
 [websocket]
 debug = 2
