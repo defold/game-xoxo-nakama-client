@@ -1,6 +1,6 @@
 [project]
 title = XOXO Nakama
-version = 1.0.3
+version = 1.1.0
 write_log = 0
 compress_archive = 1
 publisher = unnamed
@@ -184,9 +184,9 @@ max_tile_count = 2048
 run_while_iconified = 0
 
 [nakama]
-host = xoxo.eu-west1-a.nakamacloud.io
+host = xoxo-prod1.eu-west1-a.nakamacloud.io
 port = 443
-server_key = d4aqXLFCuKsF
+server_key = LUqmWz5zwa1k
 
 [websocket]
 debug = 2
