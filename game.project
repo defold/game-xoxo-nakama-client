@@ -34,3 +34,8 @@ server_key = d4aqXLFCuKsF
 [websocket]
 debug = 2
 
+[html5]
+show_fullscreen_button = 0
+show_made_with_defold = 0
+scale_mode = fit
+
