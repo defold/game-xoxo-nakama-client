@@ -36,7 +36,7 @@ end
 local function join_match(match_id, token, match_callback)
 	nakama.sync(function()
 		log("Sending match_join message")
-		local message = nakama.create_match_join_message(match_id, token, nil)
+		local message = nakama.create_match_join_message(match_id, token)
 		local result = nakama.socket_send(socket, message)
 		if result.match then
 			match = result.match
@@ -78,6 +78,8 @@ local function find_opponent_and_join_match(match_callback)
 
 	nakama.sync(function()
 		log("Sending matchmaker_add message")
+		-- find a match with any other player
+		-- make sure the match contains exactly 2 users (min 2 and max 2)
 		local message = nakama.create_matchmaker_add_message("*", 2, 2)
 		local result = nakama.socket_send(socket, message)
 		if result.error then
@@ -99,7 +101,7 @@ local function send_player_move(match_id, row, col)
 		local message = nakama.create_match_data_message(match_id, OP_CODE_MOVE, data)
 		local result = nakama.socket_send(socket, message)
 		if result.error then
-			print(result.error.message)
+			log(result.error.message)
 			pprint(result)
 		end
 	end)
