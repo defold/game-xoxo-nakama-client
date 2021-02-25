@@ -19,13 +19,11 @@ local OP_CODE_STATE = 2
 -- authentication using device id
 local function device_login(client)
 	local body = nakama.create_api_account_device(defold.uuid())
+	-- login using the token and create an account if the user
+	-- doesn't already exist
 	local result = nakama.authenticate_device(client, body, true)
 	if result.token then
-		nakama.set_bearer_token(client, result.token)
-		return true
-	end
-	local result = nakama.authenticate_device(client, body, false)
-	if result.token then
+		-- store the token and use it when communicating with the server
 		nakama.set_bearer_token(client, result.token)
 		return true
 	end
@@ -135,14 +133,16 @@ function M.login(callback)
 	-- enable logging
 	log.print()
 
+	-- create server config
+	-- we read server url, port and server key from the game.project file
 	local config = {}
 	config.host = sys.get_config("nakama.host", "127.0.0.1")
 	config.port = tonumber(sys.get_config("nakama.port", "7350"))
-	config.use_ssl = config.port == 443
+	config.use_ssl = (config.port == 443)
 	config.username = sys.get_config("nakama.server_key", "defaultkey")
 	config.password = ""
 	config.engine = defold
-		
+
 	client = nakama.create_client(config)
 
 	nakama.sync(function()
