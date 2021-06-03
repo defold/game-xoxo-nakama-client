@@ -8,7 +8,7 @@ function init(self)
 			if ok then
 				msg.post(".", "acquire_input_focus")
 				-- let the game know that we are connected
-				xoxo.connected()
+				xoxo.show_menu()
 			end
 		end)
 	end)
