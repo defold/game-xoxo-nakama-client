@@ -134,10 +134,10 @@ function M.login(callback)
 	-- create server config
 	-- we read server url, port and server key from the game.project file
 	local config = {}
-	config.host = sys.get_config("nakama.host", "127.0.0.1")
-	config.port = tonumber(sys.get_config("nakama.port", "7350"))
+	config.host = sys.get_config_string("nakama.host", "127.0.0.1")
+	config.port = sys.get_config_number("nakama.port", 7350)
 	config.use_ssl = (config.port == 443)
-	config.username = sys.get_config("nakama.server_key", "defaultkey")
+	config.username = sys.get_config_string("nakama.server_key", "defaultkey")
 	config.password = ""
 	config.engine = defold
 
