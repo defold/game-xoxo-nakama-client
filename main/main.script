@@ -9,6 +9,8 @@ function init(self)
 				msg.post(".", "acquire_input_focus")
 				-- let the game know that we are connected
 				xoxo.show_menu()
+			else
+				msg.post("/xoxo/controller", "ready")
 			end
 		end)
 	end)
